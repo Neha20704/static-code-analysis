@@ -1,0 +1,12 @@
+inventory.py:2:1: F401 'logging' imported but unused
+inventory.py:7:1: E302 expected 2 blank lines, found 1
+inventory.py:13:1: E302 expected 2 blank lines, found 1
+inventory.py:21:1: E302 expected 2 blank lines, found 1
+inventory.py:24:1: E302 expected 2 blank lines, found 1
+inventory.py:26:49: E261 at least two spaces before inline comment
+inventory.py:30:1: E302 expected 2 blank lines, found 1
+inventory.py:35:1: E302 expected 2 blank lines, found 1
+inventory.py:40:1: E302 expected 2 blank lines, found 1
+inventory.py:47:1: E302 expected 2 blank lines, found 1
+inventory.py:60:39: E261 at least two spaces before inline comment
+inventory.py:61:1: E305 expected 2 blank lines after class or function definition, found 0

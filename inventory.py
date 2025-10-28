@@ -1,60 +1,101 @@
-import json
-import logging
+"""
+Inventory management system module.
+Handles adding, removing, saving, and loading inventory data.
+Includes basic logging.
+"""
+
+
+import json  # removed import logging since it was never used
 from datetime import datetime
+import ast
+
 
 stock_data = {}
 
-def addItem(item="default", qty=0, logs=[]):
-    if not item:
-        return
-    stock_data[item] = stock_data.get(item, 0) + qty
-    logs.append("%s: Added %d of %s" % (str(datetime.now()), qty, item))
 
-def removeItem(item, qty):
+def add_item(item="default", qty=0, logs=None):  # renamed from addItem
+    """
+    Add a given quantity of an item to the stock dictionary
+    """
+    if logs is None:
+        logs = []
+    stock_data[item] = stock_data.get(item, 0) + qty
+    # changed to f-string
+    logs.append(f"{datetime.now()}: Added {qty} of {item}")
+
+
+def remove_item(item, qty):  # renamed from removeItem
+    """
+    Remove an item or decrease its quantity from the stock.
+    """
     try:
         stock_data[item] -= qty
         if stock_data[item] <= 0:
             del stock_data[item]
-    except:
+    except KeyError:  # changed from Exception to KeyError
         pass
 
-def getQty(item):
+
+def get_qty(item):  # renamed from getQty
+    """
+    Return the quantity of the given item from stock_data.
+    """
     return stock_data[item]
 
-def loadData(file="inventory.json"):
-    f = open(file, "r")
-    global stock_data
-    stock_data = json.loads(f.read())
-    f.close()
 
-def saveData(file="inventory.json"):
-    f = open(file, "w")
-    f.write(json.dumps(stock_data))
-    f.close()
+def load_data(file="inventory.json"):  # renamed from loadData
+    """
+    load the data from inventory
+    """
+    with open(file, "r", encoding="utf-8") as f:  # fixed: added encoding
+        data = json.loads(f.read())
+    return data
 
-def printData():
+
+def save_data(file="inventory.json"):   # renamed from saveData
+    """
+    save the data
+    """
+    with open(file, "w", encoding="utf-8") as f:
+        f.write(json.dumps(stock_data))
+
+
+def print_data():  # renamed from printData
+    """
+    prints the data
+    """
     print("Items Report")
-    for i in stock_data:
-        print(i, "->", stock_data[i])
+    for item, qty in stock_data.items():
+        print(item, "->", qty)
 
-def checkLowItems(threshold=5):
+
+def check_low_items(threshold=5):  # renamed from checkLowItems
+    """
+    checks the low items in stock data
+    """
     result = []
-    for i in stock_data:
-        if stock_data[i] < threshold:
-            result.append(i)
+    for item, qty in stock_data.items():
+        if qty < threshold:
+            result.append(item)
     return result
 
+
 def main():
-    addItem("apple", 10)
-    addItem("banana", -2)
-    addItem(123, "ten")
-    removeItem("apple", 3)
-    removeItem("orange", 1)
-    print("Apple stock:", getQty("apple"))
-    print("Low items:", checkLowItems())
-    saveData()
-    loadData()
-    printData()
-    eval("print('eval used')")
+    """
+    Main function to demonstrate inventory operations.
+    """
+    add_item("apple", 10)
+    add_item("banana", -2)
+    add_item(123, "ten")
+    remove_item("apple", 3)
+    remove_item("orange", 1)
+    print("Apple stock:", get_qty("apple"))
+    print("Low items:", check_low_items())
+    save_data()
+    stock_data.update(load_data())
+    print_data()
+    # fixed: replaced eval with literal_eval
+    ast.literal_eval("print('eval used')")
+
 
 main()
